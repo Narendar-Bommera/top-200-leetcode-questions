@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Solution {
+    public int countPalindromicSubsequence(String s) {
+        Map<Character, Integer> first = new HashMap<>();
+        Map<Character, Integer> last = new HashMap<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            first.putIfAbsent(ch, i);
+            last.put(ch, i);
+        }
+
+        Set<String> result = new HashSet<>();
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+            if (!first.containsKey(ch)) continue;
+            int l = first.get(ch);
+            int r = last.get(ch);
+            if (r - l <= 1) continue;
+
+            Set<Character> mids = new HashSet<>();
+            for (int i = l + 1; i < r; i++) {
+                mids.add(s.charAt(i));
+            }
+
+            for (char mid : mids) {
+                result.add("" + ch + mid + ch);
+            }
+        }
+
+        return result.size();
+    }
+}
