@@ -1,0 +1,44 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public boolean isMatch(String s, String p) {
+        Map<String, Boolean> memo = new HashMap<>();
+        return dp(0, 0, s, p, memo);
+    }
+
+    private boolean dp(int i, int j, String s, String p, Map<String, Boolean> memo) {
+        String key = i + "," + j;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        boolean result;
+
+        if (j == p.length()) {
+            result = i == s.length();
+        } else {
+            boolean firstMatch = (i < s.length()) &&
+                    (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.');
+
+            if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
+                result = dp(i, j + 2, s, p, memo) || (firstMatch && dp(i + 1, j, s, p, memo));
+            } else {
+                result = firstMatch && dp(i + 1, j + 1, s, p, memo);
+            }
+        }
+
+        memo.put(key, result);
+        return result;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String s = "aab";
+        String p = "c*a*b";
+        boolean result = sol.isMatch(s, p);
+        System.out.println(result);
+    }
+}
