@@ -1,19 +1,46 @@
+import java.util.*;
+
 class Solution {
-    List<List<Integer>> result = new ArrayList();
-    void try_combination(List<Integer> combination, int k, int n, int start){
-        if(k == combination.size()){
-            if(n == 0) result.add(new ArrayList<Integer>(combination));
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        findCombination(0, target, candidates, ans, ds);
+        return ans;
+    }
+
+    private void findCombination(int ind, int target, int[] arr, List<List<Integer>> ans, List<Integer> ds) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(ds));
             return;
         }
-        for(int i = start; i <= 9; ++i){
-            combination.add(i);
-            try_combination(combination, k, n-i, i+1);
-            combination.remove(combination.size() - 1);
+        for (int i = ind; i < arr.length; i++) {
+            if (i > ind && arr[i] == arr[i - 1]) continue;
+            if (arr[i] > target) break;
+            ds.add(arr[i]);
+            findCombination(i + 1, target - arr[i], arr, ans, ds);
+            ds.remove(ds.size() - 1);
         }
     }
-    public List<List<Integer>> combinationSum3(int k, int n) {
-        List<Integer> combination = new ArrayList();
-        try_combination(combination, k, n, 1);
-        return result;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] input = sc.nextLine().split(" ");
+        int[] candidates = new int[input.length];
+        for (int i = 0; i < input.length; i++) {
+            candidates[i] = Integer.parseInt(input[i]);
+        }
+        int target = sc.nextInt();
+        Solution sol = new Solution();
+        List<List<Integer>> result = sol.combinationSum2(candidates, target);
+        for (List<Integer> comb : result) {
+            System.out.print("[");
+            for (int i = 0; i < comb.size(); i++) {
+                System.out.print(comb.get(i));
+                if (i != comb.size() - 1) System.out.print(", ");
+            }
+            System.out.println("]");
+        }
+        sc.close();
     }
 }
