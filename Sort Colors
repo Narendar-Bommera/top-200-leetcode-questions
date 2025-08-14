@@ -1,0 +1,71 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        String input = scanner.nextLine();
+        
+        int[] nums = parseArray(input);
+        
+        Solution solution = new Solution();
+        solution.sortColors(nums);
+        
+        printArray(nums);
+        
+        scanner.close();
+    }
+    
+    private static int[] parseArray(String input) {
+        input = input.trim();
+        input = input.substring(1, input.length() - 1);
+        
+        if (input.isEmpty()) {
+            return new int[0];
+        }
+        
+        String[] parts = input.split(",");
+        int[] result = new int[parts.length];
+        
+        for (int i = 0; i < parts.length; i++) {
+            result[i] = Integer.parseInt(parts[i].trim());
+        }
+        
+        return result;
+    }
+    
+    private static void printArray(int[] nums) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < nums.length; i++) {
+            sb.append(nums[i]);
+            if (i < nums.length - 1) {
+                sb.append(",");
+            }
+        }
+        sb.append("]");
+        System.out.println(sb.toString());
+    }
+}
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int low = 0, mid = 0, high = nums.length - 1;
+        while (mid <= high) {
+            if (nums[mid] == 0) {
+                int temp = nums[mid];
+                nums[mid] = nums[low];
+                nums[low] = temp;
+                mid++;
+                low++;
+            } else if (nums[mid] == 1) {
+                mid++;
+            } else if (nums[mid] == 2) {
+                int temp = nums[mid];
+                nums[mid] = nums[high];
+                nums[high] = temp;
+                high--;
+            }
+        }
+    }
+}
