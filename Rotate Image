@@ -1,0 +1,88 @@
+\\\\\\\\\\\\\full java code\\\\\\\\\\\\\\\
+
+import java.util.*;
+
+class Solution {
+
+    // Function to rotate the matrix 90 degrees clockwise
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+
+        // Transpose the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+        // Reverse each row
+        for (int i = 0; i < n; i++) {
+            int left = 0;
+            int right = n - 1;
+            while (left < right) {
+                int temp = matrix[i][left];
+                matrix[i][left] = matrix[i][right];
+                matrix[i][right] = temp;
+                left++;
+                right--;
+            }
+        }
+    }
+
+    // Helper function to print the matrix
+    public void printMatrix(int[][] matrix) {
+        System.out.print("[");
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.print("[");
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j]);
+                if (j < matrix[i].length - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.print("]");
+            if (i < matrix.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Solution solution = new Solution();
+
+        List<int[]> matrixList = new ArrayList<>();
+        String line;
+
+        // Reading matrix row by row from user input
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            if (line.isEmpty()) {
+                break;
+            }
+            String[] tokens = line.split(" ");
+            int[] row = new int[tokens.length];
+            for (int i = 0; i < tokens.length; i++) {
+                row[i] = Integer.parseInt(tokens[i]);
+            }
+            matrixList.add(row);
+        }
+
+        // Convert the matrix list to a 2D array
+        int[][] matrix = new int[matrixList.size()][];
+        for (int i = 0; i < matrixList.size(); i++) {
+            matrix[i] = matrixList.get(i);
+        }
+
+        // Rotate the matrix
+        solution.rotate(matrix);
+
+        // Print the rotated matrix
+        solution.printMatrix(matrix);
+
+        scanner.close();
+    }
+}
