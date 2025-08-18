@@ -1,0 +1,93 @@
+import java.util.Scanner;
+
+public class Main {
+   public static void main(String[] args) {
+       Scanner scanner = new Scanner(System.in);
+       String input = scanner.nextLine();
+       int[][] matrix = parseMatrix(input);
+       Solution solution = new Solution();
+       solution.setZeroes(matrix);
+       printMatrix(matrix);
+       scanner.close();
+   }
+   
+   private static int[][] parseMatrix(String input) {
+       input = input.replaceAll("\\s+", "");
+       input = input.substring(1, input.length() - 1);
+       String[] rows = input.split("\\],\\[");
+       rows[0] = rows[0].startsWith("[") ? rows[0].substring(1) : rows[0];
+       int lastIndex = rows.length - 1;
+       rows[lastIndex] = rows[lastIndex].endsWith("]") ? 
+                        rows[lastIndex].substring(0, rows[lastIndex].length() - 1) : rows[lastIndex];
+       String[] firstRowElements = rows[0].split(",");
+       int[][] matrix = new int[rows.length][firstRowElements.length];
+       for (int i = 0; i < rows.length; i++) {
+           String[] elements = rows[i].split(",");
+           for (int j = 0; j < elements.length; j++) {
+               matrix[i][j] = Integer.parseInt(elements[j]);
+           }
+       }
+       return matrix;
+   }
+   
+   private static void printMatrix(int[][] matrix) {
+       System.out.print("[");
+       for (int i = 0; i < matrix.length; i++) {
+           System.out.print("[");
+           for (int j = 0; j < matrix[i].length; j++) {
+               System.out.print(matrix[i][j]);
+               if (j < matrix[i].length - 1) {
+                   System.out.print(",");
+               }
+           }
+           System.out.print("]");
+           if (i < matrix.length - 1) {
+               System.out.print(",");
+           }
+       }
+       System.out.println("]");
+   }
+}
+
+class Solution {
+   public void setZeroes(int[][] matrix) {
+       int m = matrix.length, n = matrix[0].length;
+       boolean firstRowZero = false, firstColZero = false;
+
+       for (int i = 0; i < m; i++) {
+           if (matrix[i][0] == 0) firstColZero = true;
+       }
+       for (int j = 0; j < n; j++) {
+           if (matrix[0][j] == 0) firstRowZero = true;
+       }
+
+       for (int i = 1; i < m; i++) {
+           for (int j = 1; j < n; j++) {
+               if (matrix[i][j] == 0) {
+                   matrix[i][0] = 0;
+                   matrix[0][j] = 0;
+               }
+           }
+       }
+
+       for (int i = 1; i < m; i++) {
+           for (int j = 1; j < n; j++) {
+               if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                   matrix[i][j] = 0;
+               }
+           }
+       }
+
+       if (firstRowZero) {
+           for (int j = 0; j < n; j++) {
+               matrix[0][j] = 0;
+           }
+       }
+
+       if (firstColZero) {
+           for (int i = 0; i < m; i++) {
+               matrix[i][0] = 0;
+           }
+       }
+   }
+}
